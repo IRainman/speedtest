@@ -11,10 +11,10 @@ An Alpine Linux based docker version of LibreSpeed is also available here: [GitH
 If you just want to try it, the fastest way is:
 
 ```shell
-docker run -p 80:80 -d --name speedtest --rm ghcr.io/librespeed/speedtest
+docker run -p 80:8080 -d --name speedtest --rm ghcr.io/librespeed/speedtest
 ```
 
-Then go with your browser to port 80 of your server and try it out. If port 80 is already in use, adjust the first number in 80:80 above.
+Then go with your browser to port 80 of your server and try it out. If port 80 is already in use, adjust the first number in 80:8080 above.
 Default is to run in standalone mode.
 
 ## Docker Compose
@@ -41,9 +41,9 @@ services:
       #DISABLE_IPINFO: "false"
       #IPINFO_APIKEY: "your api key"
       #DISTANCE: "km"
-      #WEBPORT: 80
+      #WEBPORT: 8080
     ports:
-      - "80:80" # webport mapping (host:container)
+      - "80:8080" # webport mapping (host:container)
 ```
 
 Please adjust the environment variables according to the intended operating mode.
@@ -73,7 +73,7 @@ Here's a list of additional environment variables available in this mode:
 * __`DISABLE_IPINFO`__: If set to `true`, ISP info and distance will not be fetched from either [ipinfo.io](https://ipinfo.io) or the offline database. Default: value: `false`
 * __`IPINFO_APIKEY`__: API key for [ipinfo.io](https://ipinfo.io). Optional, but required if you want to use the full [ipinfo.io](https://ipinfo.io) APIs (required for distance measurement)
 * __`DISTANCE`__: When `DISABLE_IPINFO` is set to false, this specifies how the distance from the server is measured. Can be either `km` for kilometers, `mi` for miles, or an empty string to disable distance measurement. Requires an [ipinfo.io](https://ipinfo.io) API key. Default value: `km`
-* __`WEBPORT`__: Allows choosing a custom port for the included web server. Default value: `80`. Note that you will have to expose it through docker with the -p argument. This is not the port where the service is exposed outside docker!
+* __`WEBPORT`__: Allows choosing a custom port for the included web server. Default value: `8080`. Note that you will have to expose it through docker with the -p argument. This is not the port where the service is exposed outside docker!
 
 If telemetry is enabled, a stats page will be available at `http://your.server/results/stats.php`, but a password must be specified.
 
@@ -110,7 +110,7 @@ Here's a list of additional environment variables available in this mode:
 This command starts LibreSpeed in backend mode, with the default settings, on port 80:
 
 ```shell
-docker run -e MODE=backend -p 80:80 -it ghcr.io/librespeed/speedtest
+docker run -e MODE=backend -p 80:8080 -it ghcr.io/librespeed/speedtest
 ```
 
 ### Frontend mode
