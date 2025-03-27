@@ -39,11 +39,13 @@ function twarn(s) {
 const settings = {
 	mpot: false, //set to true when in MPOT mode
 	test_order: "IP_D_U", //order in which tests will be performed as a string. D=Download, U=Upload, P=Ping+Jitter, I=IP, _=1 second delay
-	time_ul_max: 15, // max duration of upload test in seconds
-	time_dl_max: 15, // max duration of download test in seconds
+	time_ul_max: 20, // max duration of upload test in seconds
+	time_dl_max: 20, // max duration of download test in seconds
 	time_auto: true, // if set to true, tests will take less time on faster connections
 	time_ulGraceTime: 3, //time to wait in seconds before actually measuring ul speed (wait for buffers to fill)
-	time_dlGraceTime: 1.5, //time to wait in seconds before actually measuring dl speed (wait for TCP window to increase)
+	time_dlGraceTime: 3, //time to wait in seconds before actually measuring dl speed (wait for TCP window to increase)
+	time_refresh: 500, // time refresh in ms
+	bonus_limit: 1000, // maximum time bonus limit in ms
 	count_ping: 10, // number of pings to perform in ping test
 	url_dl: "backend/garbage.php", // path to a large file or garbage.php, used for download test. must be relative to this js file
 	url_ul: "backend/empty.php", // path to an empty file, used for upload test. must be relative to this js file
@@ -62,10 +64,10 @@ const settings = {
 	ping_allowPerformanceApi: true, // if enabled, the ping test will attempt to calculate the ping more precisely using the Performance API. Currently works perfectly in Chrome, badly in Edge, and not at all in Firefox. If Performance API is not supported or the result is obviously wrong, a fallback is provided.
 	overheadCompensationFactor: 1.06, //can be changed to compensate for transport overhead. (see doc.md for some other values)
 	useMebibits: false, //if set to true, speed will be reported in mebibits/s instead of megabits/s
-	telemetry_level: 3, // 0=disabled, 1=basic (results only), 2=full (results and timing) 3=debug (results+log)
+	telemetry_level: 1, // 0=disabled, 1=basic (results only), 2=full (results and timing) 3=debug (results+log)
 	url_telemetry: "results/telemetry.php", // path to the script that adds telemetry data to the database
 	telemetry_extra: "", //extra data that can be passed to the telemetry through the settings
-    forceIE11Workaround: false //when set to true, it will force the IE11 upload test on all browsers. Debug only
+	forceIE11Workaround: false //when set to true, it will force the IE11 upload test on all browsers. Debug only
 };
 
 let xhr = null; // array of currently active xhr requests
@@ -246,7 +248,7 @@ this.addEventListener("message", function(e) {
 	}
 	if (params[0] === "abort") {
 		// abort command
-        if (testState >= 4) return;
+		if (testState >= 4) return;
 		tlog("manually aborted");
 		clearRequests(); // stop all xhr activity
 		runNextTest = null;
@@ -257,7 +259,7 @@ this.addEventListener("message", function(e) {
 		ulStatus = "";
 		pingStatus = "";
 		jitterStatus = "";
-        clientIp = "";
+		clientIp = "";
 		dlProgress = 0;
 		ulProgress = 0;
 		pingProgress = 0;
@@ -383,13 +385,13 @@ function dlTest(done) {
 	for (let i = 0; i < settings.xhr_dlMultistream; i++) {
 		testStream(i, settings.xhr_multistreamDelay * i);
 	}
-	// every 200ms, update dlStatus
+	// every settings.time_refresh ms, update dlStatus
 	interval = setInterval(
 		function() {
 			tverb("DL: " + dlStatus + (graceTimeDone ? "" : " (in grace time)"));
 			const t = new Date().getTime() - startT;
 			if (graceTimeDone) dlProgress = (t + bonusT) / (settings.time_dl_max * 1000);
-			if (t < 200) return;
+			if (t < settings.time_refresh) return;
 			if (!graceTimeDone) {
 				if (t > 1000 * settings.time_dlGraceTime) {
 					if (totLoaded > 0) {
@@ -403,9 +405,9 @@ function dlTest(done) {
 			} else {
 				const speed = totLoaded / (t / 1000.0);
 				if (settings.time_auto) {
-					//decide how much to shorten the test. Every 200ms, the test is shortened by the bonusT calculated here
+					//decide how much to shorten the test. Every settings.time_refresh ms, the test is shortened by the bonusT calculated here
 					const bonus = (5.0 * speed) / 100000;
-					bonusT += bonus > 400 ? 400 : bonus;
+					bonusT += bonus > settings.bonus_limit ? settings.bonus_limit : bonus;
 				}
 				//update status
 				dlStatus = ((speed * 8 * settings.overheadCompensationFactor) / (settings.useMebibits ? 1048576 : 1000000)).toFixed(2); // speed is multiplied by 8 to go from bytes to bits, overhead compensation is applied, then everything is divided by 1048576 or 1000000 to go to megabits/mebibits
@@ -420,7 +422,7 @@ function dlTest(done) {
 				}
 			}
 		}.bind(this),
-		200
+		settings.time_refresh
 	);
 }
 // upload test, calls done function when it's over
@@ -531,13 +533,13 @@ function ulTest(done) {
 		for (let i = 0; i < settings.xhr_ulMultistream; i++) {
 			testStream(i, settings.xhr_multistreamDelay * i);
 		}
-		// every 200ms, update ulStatus
+		// every settings.time_refresh ms, update ulStatus
 		interval = setInterval(
 			function() {
 				tverb("UL: " + ulStatus + (graceTimeDone ? "" : " (in grace time)"));
 				const t = new Date().getTime() - startT;
 				if (graceTimeDone) ulProgress = (t + bonusT) / (settings.time_ul_max * 1000);
-				if (t < 200) return;
+				if (t < settings.time_refresh) return;
 				if (!graceTimeDone) {
 					if (t > 1000 * settings.time_ulGraceTime) {
 						if (totLoaded > 0) {
@@ -551,9 +553,9 @@ function ulTest(done) {
 				} else {
 					const speed = totLoaded / (t / 1000.0);
 					if (settings.time_auto) {
-						//decide how much to shorten the test. Every 200ms, the test is shortened by the bonusT calculated here
+						//decide how much to shorten the test. Every settings.time_refresh ms, the test is shortened by the bonusT calculated here
 						const bonus = (5.0 * speed) / 100000;
-						bonusT += bonus > 400 ? 400 : bonus;
+						bonusT += bonus > settings.bonus_limit ? settings.bonus_limit : bonus;
 					}
 					//update status
 					ulStatus = ((speed * 8 * settings.overheadCompensationFactor) / (settings.useMebibits ? 1048576 : 1000000)).toFixed(2); // speed is multiplied by 8 to go from bytes to bits, overhead compensation is applied, then everything is divided by 1048576 or 1000000 to go to megabits/mebibits
@@ -568,7 +570,7 @@ function ulTest(done) {
 					}
 				}
 			}.bind(this),
-			200
+			settings.time_refresh
 		);
 	}.bind(this);
 	if (settings.mpot) {
