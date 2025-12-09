@@ -197,7 +197,7 @@ Speedtest.prototype = {
     const select = function(serverList, selected) {
       //pings the specified URL, then calls the function result. Result will receive a parameter which is either the time it took to ping the URL, or -1 if something went wrong.
       const PING_TIMEOUT = 2000;
-	  
+
       const ping = function(url, rtt) {
         url += (url.match(/\?/) ? "&" : "?") + "cors=true";
         let xhr = new XMLHttpRequest();
@@ -325,7 +325,7 @@ Speedtest.prototype = {
         console.error("Speedtest onupdate event threw exception: " + e);
       }
       if (data.testState >= 4) {
-	  clearInterval(this.updater);
+        clearInterval(this.updater);
         this._state = 4;
         try {
           if (this.onend) this.onend(data.testState == 5);
