@@ -1,4 +1,4 @@
-![LibreSpeed Logo](https://github.com/librespeed/speedtest/blob/master/.logo/logo3.png?raw=true)
+![LibreSpeed Logo](https://github.com/IRainman/speedtest/blob/master/.logo/logo3.png?raw=true)
 
 # LibreSpeed
 
@@ -12,7 +12,7 @@ This is a very lightweight speed test implemented in Javascript, using XMLHttpRe
 
 ## Compatibility
 
-All modern browsers are supported: IE11, latest Edge, latest Chrome, latest Firefox, latest Safari.
+All modern browsers are supported: latest Edge, latest Chrome, latest Firefox, latest Safari.
 Works with mobile versions too.
 
 ## Features
