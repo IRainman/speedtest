@@ -1,7 +1,8 @@
 /*
-	LibreSpeed - Worker
-	by Federico Dossena
-	https://github.com/librespeed/speedtest/
+	SpeedTest - Main
+	original by Federico Dossena
+	forked by HedgehogInTheCPP
+	https://github.com/IRainman/speedtest
 	GNU LGPLv3 License
 */
 
@@ -67,7 +68,7 @@ const settings = {
 	telemetry_level: 1, // 0=disabled, 1=basic (results only), 2=full (results and timing) 3=debug (results+log)
 	url_telemetry: "results/telemetry.php", // path to the script that adds telemetry data to the database
 	telemetry_extra: "", //extra data that can be passed to the telemetry through the settings
-	forceIE11Workaround: false //when set to true, it will force the IE11 upload test on all browsers. Debug only
+	forceXHRworkaround: false //when set to true, it will force the XHR crutch for upload test on all browsers. Debug only
 };
 
 let xhr = null; // array of currently active xhr requests
@@ -149,11 +150,11 @@ this.addEventListener("message", function(e) {
 			}
 			if (/Edge.(\d+\.\d+)/i.test(ua)) {
 				//Edge 15 introduced a bug that causes onprogress events to not get fired, we have to use the "small chunks" workaround that reduces accuracy
-				settings.forceIE11Workaround = true;
+				settings.forceXHRworkaround = true;
 			}
 			if (/PlayStation 4.(\d+\.\d+)/i.test(ua)) {
-				//PS4 browser has the same bug as IE11/Edge
-				settings.forceIE11Workaround = true;
+				//PS4 browser has the same bug as Edge
+				settings.forceXHRworkaround = true;
 			}
 			if (/Chrome.(\d+)/i.test(ua) && /Android|iPhone|iPad|iPod|Windows Phone/i.test(ua)) {
 				//cheap af
@@ -161,8 +162,8 @@ this.addEventListener("message", function(e) {
 				settings.xhr_ul_blob_megabytes = 4;
 			}
 			if (/^((?!chrome|android|crios|fxios).)*safari/i.test(ua)) {
-				//Safari also needs the IE11 workaround but only for the MPOT version
-				settings.forceIE11Workaround = true;
+				//Safari also needs the XHR workaround but only for the MPOT version
+				settings.forceXHRworkaround = true;
 			}
 			//telemetry_level has to be parsed and not just copied
 			if (typeof s.telemetry_level !== "undefined") settings.telemetry_level = s.telemetry_level === "basic" ? 1 : s.telemetry_level === "full" ? 2 : s.telemetry_level === "debug" ? 3 : 0; // telemetry level
@@ -291,8 +292,8 @@ function clearRequests() {
 	}
 }
 // gets client's IP using url_getIp, then calls the done function
-let ipCalled = false; // used to prevent multiple accidental calls to getIp
-let ispInfo = ""; //used for telemetry
+var ipCalled = false; // used to prevent multiple accidental calls to getIp
+var ispInfo = ""; //used for telemetry
 function getIp(done) {
 	tverb("getIp");
 	if (ipCalled) return;
@@ -319,7 +320,7 @@ function getIp(done) {
 	xhr.send();
 }
 // download test, calls done function when it's over
-let dlCalled = false; // used to prevent multiple accidental calls to dlTest
+var dlCalled = false; // used to prevent multiple accidental calls to dlTest
 function dlTest(done) {
 	tverb("dlTest");
 	if (dlCalled) return;
@@ -426,7 +427,7 @@ function dlTest(done) {
 	);
 }
 // upload test, calls done function when it's over
-let ulCalled = false; // used to prevent multiple accidental calls to ulTest
+var ulCalled = false; // used to prevent multiple accidental calls to ulTest
 function ulTest(done) {
 	tverb("ulTest");
 	if (ulCalled) return;
@@ -465,20 +466,20 @@ function ulTest(done) {
 					let prevLoaded = 0; // number of bytes transmitted last time onprogress was called
 					let x = new XMLHttpRequest();
 					xhr[i] = x;
-					let ie11workaround;
-					if (settings.forceIE11Workaround) ie11workaround = true;
+					let XHRworkaround;
+					if (settings.forceXHRworkaround) XHRworkaround = true;
 					else {
 						try {
 							xhr[i].upload.onprogress;
-							ie11workaround = false;
+							XHRworkaround = false;
 						} catch (e) {
-							ie11workaround = true;
+							XHRworkaround = true;
 						}
 					}
-					if (ie11workaround) {
-						// IE11 workaround: xhr.upload does not work properly, therefore we send a bunch of small 256k requests and use the onload event as progress. This is not precise, especially on fast connections
+					if (XHRworkaround) {
+						// XHR workaround: xhr.upload does not work properly, therefore we send a bunch of small 256k requests and use the onload event as progress. This is not precise, especially on fast connections
 						xhr[i].onload = xhr[i].onerror = function() {
-							tverb("ul stream progress event (ie11wa)");
+							tverb("ul stream progress event (XHRwa)");
 							totLoaded += reqsmall.size;
 							testStream(i, 0);
 						};
@@ -586,7 +587,7 @@ function ulTest(done) {
 	} else testFunction();
 }
 // ping+jitter test, function done is called when it's over
-let ptCalled = false; // used to prevent multiple accidental calls to pingTest
+var ptCalled = false; // used to prevent multiple accidental calls to pingTest
 function pingTest(done) {
 	tverb("pingTest");
 	if (ptCalled) return;
