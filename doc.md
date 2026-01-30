@@ -1,7 +1,7 @@
 # LibreSpeed
 
 > by Federico Dossena
-> Version 5.4.1
+> Version 5.5.1
 > [https://github.com/librespeed/speedtest/](https://github.com/librespeed/speedtest/)
 
 ## Introduction
@@ -871,6 +871,9 @@ s.setParameter("test_order","P_D_U");
 ```
 
 This will point to our static files and set the test to only do ping/jitter, download and upload tests.
+
+There is also an example to achieve this with nginx backend here:
+https://github.com/librespeed/speedtest/issues/375#issuecomment-3769211254
 
 ## Troubleshooting
 

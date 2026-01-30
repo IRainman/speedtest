@@ -50,7 +50,7 @@ function Speedtest() {
   this._settings = {}; //settings for the speed test worker
   this._state = 0; //0=adding settings, 1=adding servers, 2=server selection done, 3=test running, 4=done
   console.log(
-    "SpeedTest by HedgehogInTheCPP v5.4.1 - https://github.com/IRainman/speedtest"
+    "SpeedTest by HedgehogInTheCPP v5.5.1 - https://github.com/IRainman/speedtest"
   );
 }
 
