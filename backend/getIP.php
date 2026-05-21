@@ -156,24 +156,29 @@ header('Pragma: no-cache');
 
 $ip = getClientIp();
 //if the user requested the ISP info, we first try to fetch it using ipinfo.io (if there is no api key set it fails without sending data, it can also fail because of rate limiting or invalid responses), then if fails (or if ISP info was not requested) we just respond with the IP address
-if(isset($_GET['isp'])){	
-	$customIpInfo = getCustomUserRangeIpInfo($ip);
+if(isset($_GET['isp'])){
+    $customIpInfo = getCustomUserRangeIpInfo($ip);
     if(!is_null($customIpInfo)){
         echo formatResponse_simple($ip,$customIpInfo);
     }else{
-		$localIpInfo = getLocalOrPrivateIpInfo($ip);
-		//local ip, no need to fetch further information
-		if(!is_null($localIpInfo)){
-			echo formatResponse_simple($ip,$localIpInfo);
-		}else{
-			$r=getIspInfo_ipinfoApi($ip);
-			if(!is_null($r)){
-				echo $r;
-			}else{
-				echo formatResponse_simple($ip);
-			}
-		}
-	}
+    $localIpInfo = getLocalOrPrivateIpInfo($ip);
+    //local ip, no need to fetch further information
+    if (is_string($localIpInfo)) {
+        echo formatResponse_simple($ip,$localIpInfo);
+    }else{
+        $r=getIspInfo_ipinfoApi($ip);
+        if(!is_null($r)){
+            echo $r;
+        }else{
+            $r=getIspInfo_ipinfoOfflineDb($ip);
+            if(!is_null($r)){
+                echo $r;
+            }else{
+                echo formatResponse_simple($ip);
+            }
+        }
+    }
+    }
 }else{
     echo formatResponse_simple($ip);
 }

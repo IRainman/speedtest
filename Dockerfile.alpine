@@ -1,7 +1,9 @@
-FROM php:8-alpine
+FROM alpine:3.23
 RUN apk add --quiet --no-cache \
     bash \
     apache2 \
+    ca-certificates \
+    php \
     php-apache2 \
     php-ctype \
     php-phar \
@@ -15,12 +17,6 @@ RUN apk add --quiet --no-cache \
     php-session \
     php-sqlite3
 
-# # use docker-php-extension-installer for automatically get the right packages installed
-# ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
-
-# # Install extensions
-# RUN install-php-extensions iconv gd pdo pdo_mysql pdo_pgsql pgsql
-
 RUN ln -sf /dev/stdout /var/log/apache2/access.log && \
     ln -sf /dev/stderr /var/log/apache2/error.log
 
@@ -29,26 +25,31 @@ RUN mkdir -p /speedtest/
 
 # Copy sources
 COPY backend/ /speedtest/backend
+COPY frontend/ /speedtest/frontend
 
 COPY results/*.php /speedtest/results/
 COPY results/*.ttf /speedtest/results/
 
 COPY *.js /speedtest/
+COPY index.html /speedtest/
+COPY index-classic.html /speedtest/
+COPY index-modern.html /speedtest/
+COPY config.json /speedtest/
 COPY favicon.ico /speedtest/
-
-COPY docker/servers.json /servers.json
 
 COPY docker/*.php /speedtest/
 COPY docker/entrypoint.sh /
 
 # Prepare default environment variables
 ENV TITLE=LibreSpeed
+ENV TAGLINE="No Flash, No Java, No Websockets, No Bullsh*t"
 ENV MODE=standalone
 ENV PASSWORD=password
 ENV TELEMETRY=false
 ENV ENABLE_ID_OBFUSCATION=false
 ENV REDACT_IP_ADDRESSES=false
 ENV WEBPORT=8080
+ENV USE_NEW_DESIGN=false
 
 # https://httpd.apache.org/docs/2.4/stopping.html#gracefulstop
 STOPSIGNAL SIGWINCH
