@@ -1,14 +1,14 @@
 {
   "name": "librespeed-speedtest",
-  "version": "6.1.0",
+  "version": "6.2.0",
   "description": "LibreSpeed - A Free and Open Source speed test that you can host on your server(s)",
   "main": "speedtest.js",
   "scripts": {
     "test": "echo \"No automated tests configured yet\" && exit 0",
     "test:e2e": "playwright test",
     "test:e2e:headed": "playwright test --headed",
-    "lint": "eslint speedtest.js speedtest_worker.js",
-    "lint:fix": "eslint --fix speedtest.js speedtest_worker.js",
+    "lint": "eslint speedtest.js speedtest_worker.js stability_worker.js",
+    "lint:fix": "eslint --fix speedtest.js speedtest_worker.js stability_worker.js",
     "format": "prettier --write \"*.js\"",
     "format:check": "prettier --check \"*.js\"",
     "validate": "npm run format:check && npm run lint",
@@ -46,8 +46,12 @@
   "files": [
     "speedtest.js",
     "speedtest_worker.js",
+    "stability_worker.js",
+    "stability.html",
     "index.html",
     "favicon.ico",
+    "manifest.webmanifest",
+    "images/",
     "backend/",
     "examples/",
     "results/"

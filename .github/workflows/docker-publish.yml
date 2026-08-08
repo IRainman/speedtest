@@ -13,7 +13,7 @@ on:
     # Publish semver tags as releases.
     tags: ["v*.*.*"]
   pull_request:
-    branches: ["{{is_default_branch}}"]
+    branches: [master]
   release:
     types: [published]
 
@@ -32,15 +32,15 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: 20
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
@@ -70,7 +70,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       # Fetch the ipinfo database file using curl if API key is defined
       - name: Fetch DB from ipinfo.io

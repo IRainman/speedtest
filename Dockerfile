@@ -10,6 +10,8 @@ RUN install-php-extensions iconv gd pdo pdo_mysql pdo_pgsql pgsql \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+COPY docker/librespeed-php.ini ${PHP_INI_DIR}/conf.d/99-librespeed.ini
+
 # Prepare files and folders
 RUN mkdir -p /speedtest/
 
@@ -25,9 +27,11 @@ COPY index.html /speedtest/
 COPY index-classic.html /speedtest/
 COPY index-modern.html /speedtest/
 COPY config.json /speedtest/
+COPY stability.html /speedtest/
 COPY favicon.ico /speedtest/
+COPY manifest.webmanifest /speedtest/
+COPY images/ /speedtest/images/
 
-COPY docker/*.php /speedtest/
 COPY docker/entrypoint.sh /
 
 # Prepare default environment variables
