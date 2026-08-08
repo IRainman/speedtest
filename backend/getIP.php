@@ -158,7 +158,7 @@ $ip = getClientIp();
 //if the user requested the ISP info, we first try to fetch it using ipinfo.io (if there is no api key set it fails without sending data, it can also fail because of rate limiting or invalid responses), then if fails (or if ISP info was not requested) we just respond with the IP address
 if(isset($_GET['isp'])){
     $customIpInfo = getCustomUserRangeIpInfo($ip);
-    if(!is_null($customIpInfo)){
+    if(is_string($customIpInfo)){
         echo formatResponse_simple($ip,$customIpInfo);
     }else{
     $localIpInfo = getLocalOrPrivateIpInfo($ip);
