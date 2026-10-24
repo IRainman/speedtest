@@ -1,7 +1,8 @@
 /*
-	LibreSpeed - Main
-	by Federico Dossena
-	https://github.com/librespeed/speedtest/
+	SpeedTest - Main
+	original by Federico Dossena
+	forked by HedgehogInTheCPP
+	https://github.com/IRainman/speedtest
 	GNU LGPLv3 License
 */
 
@@ -49,7 +50,7 @@ function Speedtest() {
   this._settings = {}; //settings for the speed test worker
   this._state = 0; //0=adding settings, 1=adding servers, 2=server selection done, 3=test running, 4=done
   console.log(
-    "LibreSpeed by Federico Dossena v6.3.1 - https://github.com/librespeed/speedtest"
+    "SpeedTestHE by HedgehogInTheCPP v6.3.1 - https://github.com/IRainman/speedtest"
   );
 }
 
@@ -196,11 +197,7 @@ Speedtest.prototype = {
     const select = function(serverList, selected) {
       //pings the specified URL, then calls the function result. Result will receive a parameter which is either the time it took to ping the URL, or -1 if something went wrong.
       const PING_TIMEOUT = 2000;
-      let USE_PING_TIMEOUT = true; //will be disabled on unsupported browsers
-      if (/MSIE.(\d+\.\d+)/i.test(navigator.userAgent)) {
-        //IE11 doesn't support XHR timeout
-        USE_PING_TIMEOUT = false;
-      }
+
       const ping = function(url, rtt) {
         url += (url.match(/\?/) ? "&" : "?") + "cors=true";
         let xhr = new XMLHttpRequest();
@@ -224,12 +221,10 @@ Speedtest.prototype = {
           rtt(-1);
         }.bind(this);
         xhr.open("GET", url);
-        if (USE_PING_TIMEOUT) {
-          try {
-            xhr.timeout = PING_TIMEOUT;
-            xhr.ontimeout = xhr.onerror;
-          } catch (e) {}
-        }
+        try {
+          xhr.timeout = PING_TIMEOUT;
+          xhr.ontimeout = xhr.onerror;
+        } catch (e) {}
         xhr.send();
       }.bind(this);
 
@@ -239,11 +234,7 @@ Speedtest.prototype = {
       const checkServer = function(server, done) {
         let i = 0;
         server.pingT = -1;
-        if (
-          location.protocol === "https:" &&
-          server.server.substring(0, 7).toLowerCase() === "http://"
-        )
-          done();
+        if (server.server.indexOf(location.protocol) == -1) done();
         else {
           const nextPing = function() {
             if (i++ == PINGS) {

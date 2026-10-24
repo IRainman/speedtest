@@ -1,11 +1,11 @@
 <!doctype html>
 <html>
-  <head>
-    <link rel="shortcut icon" href="favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no" />
-    <meta charset="UTF-8" />
-    <title>LibreSpeed - Stability Test</title>
-    <style type="text/css">
+<head>
+<link rel="shortcut icon" href="favicon.ico" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no" />
+<meta charset="UTF-8" />
+<title>SpeedtestHE - Stability Test</title>
+<style type="text/css">
       html,
       body {
         border: none;
@@ -274,85 +274,85 @@
         }
       }
     </style>
-  </head>
-  <body>
-    <h1>LibreSpeed - Stability Test</h1>
-    <nav><a href="./">&larr; Speed Test</a></nav>
+</head>
+<body>
+<h1>SpeedtestHE - Stability Test</h1>
+<nav><a href="./">&larr; Speed Test</a></nav>
 
-    <div id="controls">
-      <select id="durationSelect">
-        <option value="60">60 Seconds</option>
-        <option value="90">90 Seconds</option>
-        <option value="120">2 Minutes</option>
-        <option value="180">3 Minutes</option>
-        <option value="300">5 Minutes</option>
-      </select>
-      <select id="targetSelect" onchange="updateStartButtonState()">
-        <option value="">Local Server</option>
-        <option value="https://www.google.com/generate_204">Google</option>
-        <option value="https://www.cloudflare.com/cdn-cgi/trace">Cloudflare</option>
-        <option value="https://www.apple.com/library/test/success.html">Apple</option>
-      </select>
-      <div id="startBtn" class="disabled finding" onclick="startStop()" aria-disabled="true" title="Finding best server..."></div>
-      <div id="resetBtn" onclick="resetTest()">Reset</div>
-    </div>
+<div id="controls">
+<select id="durationSelect">
+<option value="60">60 Seconds</option>
+<option value="90">90 Seconds</option>
+<option value="120">2 Minutes</option>
+<option value="180">3 Minutes</option>
+<option value="300">5 Minutes</option>
+</select>
+<select id="targetSelect" onchange="updateStartButtonState()">
+<option value="">Local Server</option>
+<option value="https://www.google.com/generate_204">Google</option>
+<option value="https://www.cloudflare.com/cdn-cgi/trace">Cloudflare</option>
+<option value="https://www.apple.com/library/test/success.html">Apple</option>
+</select>
+<div id="startBtn" class="disabled finding" onclick="startStop()" aria-disabled="true" title="Finding best server..."></div>
+<div id="resetBtn" onclick="resetTest()">Reset</div>
+</div>
 
-    <div id="serverArea" style="display: none">
-      Server:
-      <select id="server" onchange="onServerChange(this.value)"></select>
-    </div>
+<div id="serverArea" style="display: none">
+Server:
+<select id="server" onchange="onServerChange(this.value)"></select>
+</div>
 
-    <div id="rating" class="none">--</div>
+<div id="rating" class="none">--</div>
 
-    <div id="test">
-      <div class="testGroup">
-        <div class="testArea2">
-          <div class="testName">Current</div>
-          <div id="statCurrent" class="meterText" style="color: #aa6060"></div>
-          <div class="unit">ms</div>
-        </div>
-        <div class="testArea2">
-          <div class="testName">Average</div>
-          <div id="statAvg" class="meterText" style="color: #aa6060"></div>
-          <div class="unit">ms</div>
-        </div>
-        <div class="testArea2">
-          <div class="testName">Jitter</div>
-          <div id="statJitter" class="meterText" style="color: #aa6060"></div>
-          <div class="unit">ms</div>
-        </div>
-      </div>
-      <div class="testGroup">
-        <div class="testArea2">
-          <div class="testName">Min</div>
-          <div id="statMin" class="meterText"></div>
-          <div class="unit">ms</div>
-        </div>
-        <div class="testArea2">
-          <div class="testName">Max</div>
-          <div id="statMax" class="meterText"></div>
-          <div class="unit">ms</div>
-        </div>
-        <div class="testArea2">
-          <div class="testName">Failed Requests</div>
-          <div id="statLoss" class="meterText"></div>
-          <div class="unit">%</div>
-        </div>
-        <div class="testArea2">
-          <div class="testName">Elapsed</div>
-          <div id="statElapsed" class="meterText">00:00</div>
-          <div class="unit"></div>
-        </div>
-      </div>
-    </div>
+<div id="test">
+<div class="testGroup">
+<div class="testArea2">
+<div class="testName">Current</div>
+<div id="statCurrent" class="meterText" style="color: #aa6060"></div>
+<div class="unit">ms</div>
+</div>
+<div class="testArea2">
+<div class="testName">Average</div>
+<div id="statAvg" class="meterText" style="color: #aa6060"></div>
+<div class="unit">ms</div>
+</div>
+<div class="testArea2">
+<div class="testName">Jitter</div>
+<div id="statJitter" class="meterText" style="color: #aa6060"></div>
+<div class="unit">ms</div>
+</div>
+</div>
+<div class="testGroup">
+<div class="testArea2">
+<div class="testName">Min</div>
+<div id="statMin" class="meterText"></div>
+<div class="unit">ms</div>
+</div>
+<div class="testArea2">
+<div class="testName">Max</div>
+<div id="statMax" class="meterText"></div>
+<div class="unit">ms</div>
+</div>
+<div class="testArea2">
+<div class="testName">Failed Requests</div>
+<div id="statLoss" class="meterText"></div>
+<div class="unit">%</div>
+</div>
+<div class="testArea2">
+<div class="testName">Elapsed</div>
+<div id="statElapsed" class="meterText">00:00</div>
+<div class="unit"></div>
+</div>
+</div>
+</div>
 
-    <div id="chartContainer">
-      <canvas id="pingChart"></canvas>
-    </div>
+<div id="chartContainer">
+<canvas id="pingChart"></canvas>
+</div>
 
-    <div id="optionalControls">
-      <label>
-        Alert threshold:
+<div id="optionalControls">
+<label>
+Alert threshold:
         <input
           type="range"
           id="alertThreshold"
@@ -362,39 +362,39 @@
           value="0"
           oninput="updateThreshold(this.value)"
         />
-        <span id="thresholdValue">Off</span>
-      </label>
-      <button id="downloadCsvBtn" onclick="downloadCsv()">Download CSV</button>
-    </div>
+<span id="thresholdValue">Off</span>
+</label>
+<button id="downloadCsvBtn" onclick="downloadCsv()">Download CSV</button>
+</div>
 
-    <div class="footer">
-      <a href="https://github.com/librespeed/speedtest">Source code</a>
-    </div>
+<div class="footer">
+<a href="https://github.com/IRainman/speedtest">Source code</a>
+</div>
 
-    <script type="text/javascript">
-      function I(i) {
-        return document.getElementById(i);
-      }
+<script type="text/javascript">
+function I(i) {
+  return document.getElementById(i);
+}
 
-      // Server configuration (same pattern as index.html)
-      // Set this to a different URL to load the server list from another location.
-      var SPEEDTEST_SERVERS = "server-list.json";
+// Server configuration (same pattern as index.html)
+// Set this to a different URL to load the server list from another location.
+      let SPEEDTEST_SERVERS = "server-list.json";
 
-      // State
-      var worker = null;
-      var updater = null;
-      var running = false;
-      var allPingData = []; // full dataset for chart and CSV
-      var latestData = null;
-      var alertThresholdMs = 0;
-      var lastBeepTime = 0;
-      var audioCtx = null;
-      var selectedServer = null;
-      var localServerReady = false;
-      var serverDiscoveryPending = false;
+// State
+      let worker = null;
+      let updater = null;
+      let running = false;
+      let allPingData = []; // full dataset for chart and CSV
+      let latestData = null;
+      let alertThresholdMs = 0;
+      let lastBeepTime = 0;
+      let audioCtx = null;
+      let selectedServer = null;
+      let localServerReady = false;
+      let serverDiscoveryPending = false;
 
       // Dark mode detection for canvas colors
-      var isDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+      let isDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
       try {
         window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function (e) {
           isDark = e.matches;
@@ -402,11 +402,11 @@
       } catch (e) {}
 
       // Chart constants
-      var VISIBLE_SECONDS = 60;
-      var CHART_PADDING_LEFT = 50;
-      var CHART_PADDING_RIGHT = 15;
-      var CHART_PADDING_TOP = 15;
-      var CHART_PADDING_BOTTOM = 30;
+      let VISIBLE_SECONDS = 60;
+      let CHART_PADDING_LEFT = 50;
+      let CHART_PADDING_RIGHT = 15;
+      let CHART_PADDING_TOP = 15;
+      let CHART_PADDING_BOTTOM = 30;
 
       function joinServerUrl(server, path) {
         if (!server) return path;
@@ -422,18 +422,18 @@
           return;
         }
 
-        var serverListUrl = typeof SPEEDTEST_SERVERS === "string" ? SPEEDTEST_SERVERS : "";
+        let serverListUrl = typeof SPEEDTEST_SERVERS === "string" ? SPEEDTEST_SERVERS : "";
         if (!serverListUrl) {
           SPEEDTEST_SERVERS = [];
           callback();
           return;
         }
 
-        var xhr = new XMLHttpRequest();
+        let xhr = new XMLHttpRequest();
         xhr.onload = function () {
-          var loadedServers = null;
+          let loadedServers = null;
           try {
-            var servers = JSON.parse(xhr.responseText);
+            let servers = JSON.parse(xhr.responseText);
             if (Array.isArray(servers)) {
               loadedServers = servers;
             }
@@ -483,15 +483,15 @@
           I("serverArea").style.display = "";
           serverDiscoveryPending = true;
           I("server").disabled = true;
-          var pendingOpt = document.createElement("option");
+          let pendingOpt = document.createElement("option");
           pendingOpt.value = "";
           pendingOpt.textContent = "Finding best server...";
           I("server").appendChild(pendingOpt);
           updateStartButtonState();
           // ping servers to find best one
-          var completed = 0;
-          var best = null;
-          for (var i = 0; i < SPEEDTEST_SERVERS.length; i++) {
+          let completed = 0;
+          let best = null;
+          for (let i = 0; i < SPEEDTEST_SERVERS.length; i++) {
             (function (idx) {
               pingServer(SPEEDTEST_SERVERS[idx], function (server, rtt) {
                 SPEEDTEST_SERVERS[idx].pingT = rtt;
@@ -500,9 +500,9 @@
                 if (completed === SPEEDTEST_SERVERS.length) {
                   // populate dropdown
                   I("server").innerHTML = "";
-                  for (var j = 0; j < SPEEDTEST_SERVERS.length; j++) {
+                  for (let j = 0; j < SPEEDTEST_SERVERS.length; j++) {
                     if (SPEEDTEST_SERVERS[j].pingT <= 0) continue;
-                    var opt = document.createElement("option");
+                    let opt = document.createElement("option");
                     opt.value = j;
                     opt.textContent = SPEEDTEST_SERVERS[j].name;
                     if (SPEEDTEST_SERVERS[j] === best) opt.selected = true;
@@ -521,10 +521,10 @@
       }
 
       function pingServer(server, callback) {
-        var baseUrl = joinServerUrl(server.server, server.pingURL);
-        var url = baseUrl + (baseUrl.match(/\?/) ? "&" : "?") + "cors=true&r=" + Math.random();
-        var xhr = new XMLHttpRequest();
-        var t = new Date().getTime();
+        let baseUrl = joinServerUrl(server.server, server.pingURL);
+        let url = baseUrl + (baseUrl.match(/\?/) ? "&" : "?") + "cors=true&r=" + Math.random();
+        let xhr = new XMLHttpRequest();
+        let t = new Date().getTime();
         xhr.onload = function () {
           callback(server, new Date().getTime() - t);
         };
@@ -552,8 +552,8 @@
       function updateStartButtonState() {
         if (running) return;
 
-        var startBtn = I("startBtn");
-        var canStart = canStartTest();
+        let startBtn = I("startBtn");
+        let canStart = canStartTest();
         startBtn.className = canStart ? "" : serverDiscoveryPending ? "disabled finding" : "disabled";
         startBtn.setAttribute("aria-disabled", canStart ? "false" : "true");
         startBtn.title = canStart ? "" : serverDiscoveryPending ? "Finding best server..." : "No reachable local server found";
@@ -585,8 +585,8 @@
         I("targetSelect").disabled = true;
         I("server").disabled = true;
 
-        var externalTarget = I("targetSelect").value;
-        var workerSettings = {
+        let externalTarget = I("targetSelect").value;
+        let workerSettings = {
           duration: parseInt(I("durationSelect").value),
           ping_allowPerformanceApi: true,
           url_ping_external: externalTarget
@@ -597,16 +597,16 @@
           workerSettings.mpot = true;
         }
 
-        var currentWorker = new Worker("stability_worker.js?r=" + Math.random());
+        let currentWorker = new Worker("stability_worker.js?r=" + Math.random());
         worker = currentWorker;
         worker.onmessage = function (e) {
           if (worker !== currentWorker) return;
-          var data = JSON.parse(e.data);
+          let data = JSON.parse(e.data);
           latestData = data;
 
           // accumulate ping data
           if (data.pingData && data.pingData.length > 0) {
-            for (var i = 0; i < data.pingData.length; i++) {
+            for (let i = 0; i < data.pingData.length; i++) {
               allPingData.push(data.pingData[i]);
             }
           }
@@ -639,7 +639,7 @@
         }
         // request final status
         if (worker) {
-          var stoppedWorker = worker;
+          let stoppedWorker = worker;
           stoppedWorker.postMessage("status");
           setTimeout(function () {
             try {
@@ -685,8 +685,8 @@
       }
 
       function fmtTime(sec) {
-        var m = Math.floor(sec / 60);
-        var s = Math.floor(sec % 60);
+        let m = Math.floor(sec / 60);
+        let s = Math.floor(sec % 60);
         return (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
       }
 
@@ -702,7 +702,7 @@
       // UI update loop
       function updateUI() {
         if (!latestData) return;
-        var d = latestData;
+        let d = latestData;
         I("statCurrent").textContent = fmt(d.currentPing);
         I("statAvg").textContent = fmt(d.avgPing);
         I("statMin").textContent = d.minPing > 0 ? fmt(d.minPing) : "--";
@@ -711,44 +711,44 @@
         I("statLoss").textContent = d.totalSamples > 0 ? d.packetLoss.toFixed(1) : "--";
         I("statElapsed").textContent = fmtTime(d.elapsed);
 
-        var r = getRating(d.avgPing, d.jitter, d.packetLoss);
+        let r = getRating(d.avgPing, d.jitter, d.packetLoss);
         I("rating").textContent = r.text;
         I("rating").className = r.cls;
       }
 
       // Canvas chart rendering
       function drawChart() {
-        var canvas = I("pingChart");
-        var ctx = canvas.getContext("2d");
-        var dp = window.devicePixelRatio || 1;
-        var cw = canvas.clientWidth * dp;
-        var ch = canvas.clientHeight * dp;
+        let canvas = I("pingChart");
+        let ctx = canvas.getContext("2d");
+        let dp = window.devicePixelRatio || 1;
+        let cw = canvas.clientWidth * dp;
+        let ch = canvas.clientHeight * dp;
         if (canvas.width !== cw || canvas.height !== ch) {
           canvas.width = cw;
           canvas.height = ch;
         }
         ctx.clearRect(0, 0, cw, ch);
 
-        var padL = CHART_PADDING_LEFT * dp;
-        var padR = CHART_PADDING_RIGHT * dp;
-        var padT = CHART_PADDING_TOP * dp;
-        var padB = CHART_PADDING_BOTTOM * dp;
-        var plotW = cw - padL - padR;
-        var plotH = ch - padT - padB;
+        let padL = CHART_PADDING_LEFT * dp;
+        let padR = CHART_PADDING_RIGHT * dp;
+        let padT = CHART_PADDING_TOP * dp;
+        let padB = CHART_PADDING_BOTTOM * dp;
+        let plotW = cw - padL - padR;
+        let plotH = ch - padT - padB;
 
         // colors based on theme
-        var lineColor = isDark ? "#9090FF" : "#6060AA";
-        var fillColor = isDark ? "rgba(144,144,255,0.15)" : "rgba(96,96,170,0.15)";
-        var gridColor = isDark ? "#404040" : "#E0E0E0";
-        var textColor = isDark ? "#A0A0A0" : "#808080";
-        var lostColor = "#e74c3c";
-        var thresholdColor = "rgba(231,76,60,0.6)";
+        let lineColor = isDark ? "#9090FF" : "#6060AA";
+        let fillColor = isDark ? "rgba(144,144,255,0.15)" : "rgba(96,96,170,0.15)";
+        let gridColor = isDark ? "#404040" : "#E0E0E0";
+        let textColor = isDark ? "#A0A0A0" : "#808080";
+        let lostColor = "#e74c3c";
+        let thresholdColor = "rgba(231,76,60,0.6)";
 
         // determine visible time window
-        var data = allPingData;
-        var maxTime = 0;
+        let data = allPingData;
+        let maxTime = 0;
         if (data.length > 0) maxTime = data[data.length - 1].t;
-        var timeStart, timeEnd;
+        let timeStart, timeEnd;
         if (maxTime <= VISIBLE_SECONDS) {
           timeStart = 0;
           timeEnd = Math.max(VISIBLE_SECONDS, maxTime);
@@ -758,37 +758,37 @@
         }
 
         // binary search to find first visible data point
-        var visStart = 0;
-        var lo = 0,
+        let visStart = 0;
+        let lo = 0,
           hi = data.length - 1;
         while (lo <= hi) {
-          var mid = (lo + hi) >> 1;
+          let mid = (lo + hi) >> 1;
           if (data[mid].t < timeStart) lo = mid + 1;
           else hi = mid - 1;
         }
         visStart = lo;
 
         // determine Y-axis scale from visible data only
-        var yMax = 50; // minimum 50ms scale
-        for (var i = visStart; i < data.length && data[i].t <= timeEnd; i++) {
+        let yMax = 50; // minimum 50ms scale
+        for (let i = visStart; i < data.length && data[i].t <= timeEnd; i++) {
           if (!data[i].lost && data[i].ping > yMax) yMax = data[i].ping;
         }
         yMax = Math.ceil((yMax * 1.2) / 10) * 10; // round up to nearest 10 with 20% headroom
 
-        var fontSize = 11 * dp;
+        let fontSize = 11 * dp;
         ctx.font = fontSize + "px sans-serif";
         ctx.textBaseline = "middle";
 
         // grid lines - horizontal
-        var ySteps = getYSteps(yMax);
+        let ySteps = getYSteps(yMax);
         ctx.strokeStyle = gridColor;
         ctx.lineWidth = dp;
         ctx.fillStyle = textColor;
         ctx.textAlign = "right";
-        for (var s = 0; s < ySteps.length; s++) {
-          var yVal = ySteps[s];
+        for (let s = 0; s < ySteps.length; s++) {
+          let yVal = ySteps[s];
           if (yVal > yMax) continue;
-          var y = padT + plotH - (yVal / yMax) * plotH;
+          let y = padT + plotH - (yVal / yMax) * plotH;
           ctx.beginPath();
           ctx.moveTo(padL, y);
           ctx.lineTo(padL + plotW, y);
@@ -799,11 +799,11 @@
         // grid lines - vertical (time ticks)
         ctx.textAlign = "center";
         ctx.textBaseline = "top";
-        var timeSpan = timeEnd - timeStart;
-        var tickInterval = timeSpan <= 60 ? 10 : timeSpan <= 120 ? 15 : 30;
-        var firstTick = Math.ceil(timeStart / tickInterval) * tickInterval;
-        for (var t = firstTick; t <= timeEnd; t += tickInterval) {
-          var x = padL + ((t - timeStart) / timeSpan) * plotW;
+        let timeSpan = timeEnd - timeStart;
+        let tickInterval = timeSpan <= 60 ? 10 : timeSpan <= 120 ? 15 : 30;
+        let firstTick = Math.ceil(timeStart / tickInterval) * tickInterval;
+        for (let t = firstTick; t <= timeEnd; t += tickInterval) {
+          let x = padL + ((t - timeStart) / timeSpan) * plotW;
           ctx.beginPath();
           ctx.strokeStyle = gridColor;
           ctx.moveTo(x, padT);
@@ -826,7 +826,7 @@
 
         // alert threshold line
         if (alertThresholdMs > 0 && alertThresholdMs <= yMax) {
-          var threshY = padT + plotH - (alertThresholdMs / yMax) * plotH;
+          let threshY = padT + plotH - (alertThresholdMs / yMax) * plotH;
           ctx.save();
           ctx.setLineDash([6 * dp, 4 * dp]);
           ctx.strokeStyle = thresholdColor;
@@ -841,19 +841,19 @@
         if (data.length < 2) return;
 
         // filter visible data (using binary search start index)
-        var visible = [];
-        for (var i = visStart; i < data.length && data[i].t <= timeEnd; i++) {
+        let visible = [];
+        for (let i = visStart; i < data.length && data[i].t <= timeEnd; i++) {
           visible.push(data[i]);
         }
         if (visible.length < 1) return;
 
         // draw filled area
         ctx.beginPath();
-        var started = false;
-        for (var i = 0; i < visible.length; i++) {
+        let started = false;
+        for (let i = 0; i < visible.length; i++) {
           if (visible[i].lost) continue;
-          var px = padL + ((visible[i].t - timeStart) / timeSpan) * plotW;
-          var py = padT + plotH - (visible[i].ping / yMax) * plotH;
+          let px = padL + ((visible[i].t - timeStart) / timeSpan) * plotW;
+          let py = padT + plotH - (visible[i].ping / yMax) * plotH;
           if (!started) {
             ctx.moveTo(px, padT + plotH);
             ctx.lineTo(px, py);
@@ -865,9 +865,9 @@
         // close the fill path
         if (started) {
           // find last non-lost point
-          for (var i = visible.length - 1; i >= 0; i--) {
+          for (let i = visible.length - 1; i >= 0; i--) {
             if (!visible[i].lost) {
-              var px = padL + ((visible[i].t - timeStart) / timeSpan) * plotW;
+              let px = padL + ((visible[i].t - timeStart) / timeSpan) * plotW;
               ctx.lineTo(px, padT + plotH);
               break;
             }
@@ -880,13 +880,13 @@
         // draw line
         ctx.beginPath();
         started = false;
-        for (var i = 0; i < visible.length; i++) {
+        for (let i = 0; i < visible.length; i++) {
           if (visible[i].lost) {
             started = false;
             continue;
           }
-          var px = padL + ((visible[i].t - timeStart) / timeSpan) * plotW;
-          var py = padT + plotH - (visible[i].ping / yMax) * plotH;
+          let px = padL + ((visible[i].t - timeStart) / timeSpan) * plotW;
+          let py = padT + plotH - (visible[i].ping / yMax) * plotH;
           if (!started) {
             ctx.moveTo(px, py);
             started = true;
@@ -900,9 +900,9 @@
         ctx.stroke();
 
         // draw failed request markers
-        for (var i = 0; i < visible.length; i++) {
+        for (let i = 0; i < visible.length; i++) {
           if (!visible[i].lost) continue;
-          var px = padL + ((visible[i].t - timeStart) / timeSpan) * plotW;
+          let px = padL + ((visible[i].t - timeStart) / timeSpan) * plotW;
           ctx.beginPath();
           ctx.arc(px, padT + plotH - 10 * dp, 3 * dp, 0, Math.PI * 2);
           ctx.fillStyle = lostColor;
@@ -917,9 +917,9 @@
         if (yMax <= 200) return [50, 100, 150, 200];
         if (yMax <= 500) return [100, 200, 300, 400, 500];
         // for very high values
-        var step = Math.ceil(yMax / 5 / 100) * 100;
-        var steps = [];
-        for (var v = step; v <= yMax; v += step) steps.push(v);
+        let step = Math.ceil(yMax / 5 / 100) * 100;
+        let steps = [];
+        for (let v = step; v <= yMax; v += step) steps.push(v);
         return steps;
       }
 
@@ -946,13 +946,13 @@
       }
 
       function playBeep() {
-        var now = new Date().getTime();
+        let now = new Date().getTime();
         if (now - lastBeepTime < 1000) return; // debounce 1s
         lastBeepTime = now;
         try {
           if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-          var osc = audioCtx.createOscillator();
-          var gain = audioCtx.createGain();
+          let osc = audioCtx.createOscillator();
+          let gain = audioCtx.createGain();
           osc.frequency.value = 800;
           gain.gain.value = 0.3;
           osc.connect(gain);
@@ -965,14 +965,14 @@
       // CSV download
       function downloadCsv() {
         if (allPingData.length === 0) return;
-        var csv = "elapsed_s,ping_ms,failed\n";
-        for (var i = 0; i < allPingData.length; i++) {
-          var d = allPingData[i];
+        let csv = "elapsed_s,ping_ms,failed\n";
+        for (let i = 0; i < allPingData.length; i++) {
+          let d = allPingData[i];
           csv += d.t.toFixed(3) + "," + d.ping.toFixed(2) + "," + (d.lost ? "1" : "0") + "\n";
         }
-        var blob = new Blob([csv], { type: "text/csv" });
-        var url = URL.createObjectURL(blob);
-        var a = document.createElement("a");
+        let blob = new Blob([csv], { type: "text/csv" });
+        let url = URL.createObjectURL(blob);
+        let a = document.createElement("a");
         a.href = url;
         a.download = "stability_test_" + new Date().toISOString().slice(0, 19).replace(/:/g, "-") + ".csv";
         document.body.appendChild(a);

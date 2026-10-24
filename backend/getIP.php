@@ -10,9 +10,9 @@ error_reporting(0);
 
 define('API_KEY_FILE', 'getIP_ipInfo_apikey.php');
 define('SERVER_LOCATION_CACHE_FILE', 'getIP_serverLocation.php');
-define('OFFLINE_IPINFO_DB_FILE', 'country_asn.mmdb');
 
 require_once 'getIP_util.php';
+require_once 'getIP_custom_user_range.php';
 
 function getLocalOrPrivateIpInfo($ip){
     // ::1/128 is the only localhost ipv6 address. there are no others, no need to strpos this
@@ -134,25 +134,6 @@ function getIspInfo_ipinfoApi($ip){
     ]);
 }
 
-if (PHP_VERSION_ID >= 80100){
-    require_once("geoip2.phar");
-}
-function getIspInfo_ipinfoOfflineDb($ip){
-    if (PHP_VERSION_ID < 80100 || !file_exists(OFFLINE_IPINFO_DB_FILE) || !is_readable(OFFLINE_IPINFO_DB_FILE)){
-        return null;
-    }
-    $reader = new MaxMind\Db\Reader(OFFLINE_IPINFO_DB_FILE);
-    $data = $reader->get($ip);
-    if(!is_array($data)){
-        return null;
-    }
-    $processedString = $ip.' - ' . $data['as_name'] . ', ' . $data['country_name'];
-    return json_encode([
-        'processedString' => $processedString,
-        'rawIspInfo' => $data ?: '',
-    ]);
-}
-
 function formatResponse_simple($ip,$ispName=null){
     $processedString=$ip;
     if(is_string($ispName)){
@@ -174,8 +155,12 @@ header('Cache-Control: post-check=0, pre-check=0', false);
 header('Pragma: no-cache');
 
 $ip = getClientIp();
-//if the user requested the ISP info, we first try to fetch it using ipinfo.io (if there is no api key set it fails without sending data, it can also fail because of rate limiting or invalid responses), then we try with the offline db, if that also fails (or if ISP info was not requested) we just respond with the IP address
+//if the user requested the ISP info, we first try to fetch it using ipinfo.io (if there is no api key set it fails without sending data, it can also fail because of rate limiting or invalid responses), then if fails (or if ISP info was not requested) we just respond with the IP address
 if(isset($_GET['isp'])){
+    $customIpInfo = getCustomUserRangeIpInfo($ip);
+    if(is_string($customIpInfo)){
+        echo formatResponse_simple($ip,$customIpInfo);
+    }else{
     $localIpInfo = getLocalOrPrivateIpInfo($ip);
     //local ip, no need to fetch further information
     if (is_string($localIpInfo)) {
@@ -192,6 +177,7 @@ if(isset($_GET['isp'])){
                 echo formatResponse_simple($ip);
             }
         }
+    }
     }
 }else{
     echo formatResponse_simple($ip);

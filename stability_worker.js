@@ -1,6 +1,8 @@
 /*
-	LibreSpeed - Stability Test Worker
-	https://github.com/librespeed/speedtest/
+	SpeedtestHE - Stability Test Worker
+	original by Federico Dossena
+	forked by HedgehogInTheCPP
+	https://github.com/IRainman/speedtest
 	GNU LGPLv3 License
 */
 

@@ -484,7 +484,7 @@ function drawModernImage($speedtest)
 
     // ---- header -------------------------------------------------------
     $headerBaseline = 46 * SS;
-    text($im, $M, $headerBaseline, 21 * SS, $FONT_BOLD, $white, 'LibreSpeed');
+    text($im, $M, $headerBaseline, 21 * SS, $FONT_BOLD, $white, 'SpeedtestHE');
     trackedText($im, $W / 2, $headerBaseline - 4 * SS, 10 * SS, $FONT_BOLD, $dim, 'INTERNET SPEED TEST', 3 * SS, 'center');
 
     $family = $data['family'];
@@ -559,7 +559,7 @@ function drawModernImage($speedtest)
     panel($im, $M, $fTop, $W - $M, $fBottom, $radius, $panelFill, $panelEdge);
 
     $fx = $M + 22 * SS;
-    $wmW = textWidth('LibreSpeed', $FONT_BOLD, 15 * SS);
+    $wmW = textWidth('SpeedtestHE', $FONT_BOLD, 15 * SS);
     $wmX = $W - $M - 22 * SS;
 
     $isp = fitText($data['ispinfo'], $FONT_BOLD, 15 * SS, $wmX - $wmW - $fx - 20 * SS);
@@ -575,7 +575,7 @@ function drawModernImage($speedtest)
         text($im, $cx, $fTop + 56 * SS, 12 * SS, $FONT_LIGHT, $dim, $client);
     }
 
-    text($im, $wmX, $fTop + 48 * SS, 15 * SS, $FONT_BOLD, col($im, C_TEXT_DIM), 'LibreSpeed', 'right');
+    text($im, $wmX, $fTop + 48 * SS, 15 * SS, $FONT_BOLD, col($im, C_TEXT_DIM), 'SpeedtestHE', 'right');
 
     // ---- scale down ----------------------------------------------------
     $out = imagecreatetruecolor(WIDTH, HEIGHT);
@@ -691,7 +691,7 @@ function drawClassicImage($speedtest)
     $JIT_TEXT = 'Jitter';
     $DL_TEXT = 'Download';
     $UL_TEXT = 'Upload';
-    $WATERMARK_TEXT = 'LibreSpeed';
+    $WATERMARK_TEXT = 'SpeedtestHE';
 
     // create text boxes for each part of the image
     $mbpsBbox = imageftbbox($FONT_MEASURE_SIZE_BIG, 0, $FONT_MEASURE, $MBPS_TEXT);
