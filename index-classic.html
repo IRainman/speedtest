@@ -4,11 +4,11 @@
 <link rel="shortcut icon" href="favicon.ico">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no" />
 <meta charset="UTF-8" />
-<meta name="description" content="SpeedtestHE" />
-<title>SpeedtestHE</title>
 <script src="speedtest.js"></script>
 <script>
-let SPEEDTEST_SERVERS = "server-list.json";
+function I(i) { return document.getElementById(i); }
+
+		let SPEEDTEST_SERVERS = "server-list.json";
 
 //INITIALIZE SPEEDTEST
 let s=new Speedtest(); //create speed test object
@@ -88,6 +88,8 @@ function initServers(){
 	//hardcoded server list
 	s.addTestPoints(SPEEDTEST_SERVERS);
 	runServerSelect();
+}
+	}
 }
 
 //UI CODE
@@ -320,6 +322,8 @@ function I(id){return document.getElementById(id);}
 		}
 	}
 </style>
+	<meta name="description" content="SpeedtestHE" />
+	<title>SpeedtestHE</title>
 </head>
 <body onload="initServers()">
 <h1>SpeedtestHE</h1>

@@ -170,12 +170,7 @@ if(isset($_GET['isp'])){
         if(!is_null($r)){
             echo $r;
         }else{
-            $r=getIspInfo_ipinfoOfflineDb($ip);
-            if(!is_null($r)){
-                echo $r;
-            }else{
                 echo formatResponse_simple($ip);
-            }
         }
     }
     }
