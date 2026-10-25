@@ -2,18 +2,36 @@
 <html lang="en">
 
 <head>
-<link rel="shortcut icon" href="favicon.ico">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no" />
-<meta charset="UTF-8" />
-<script src="speedtest.js"></script>
-<script>
-function I(i) { return document.getElementById(i); }
+	<link rel="shortcut icon" href="favicon.ico">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no" />
+	<meta charset="UTF-8" />
+	<script src="speedtest.js"></script>
+	<script>
+		function I(i) { return document.getElementById(i); }
 
-		let SPEEDTEST_SERVERS = "server-list.json";
+		//LIST OF TEST SERVERS. Leave empty if you're doing a standalone installation. See documentation for details
+		const SPEEDTEST_SERVERS = [
+			/*{	//this server doesn't actually exist, remove it
+				name:"Example Server 1", //user friendly name for the server
+				server:"//test1.mydomain.com/", //URL to the server. // at the beginning will be replaced with http:// or https:// automatically
+				dlURL:"backend/garbage.php",  //path to download test on this server (garbage.php or replacement)
+				ulURL:"backend/empty.php",  //path to upload test on this server (empty.php or replacement)
+				pingURL:"backend/empty.php",  //path to ping/jitter test on this server (empty.php or replacement)
+				getIpURL:"backend/getIP.php"  //path to getIP on this server (getIP.php or replacement)
+			},
+			{	//this server doesn't actually exist, remove it
+				name:"Example Server 2", //user friendly name for the server
+				server:"//test2.example.com/", //URL to the server. // at the beginning will be replaced with http:// or https:// automatically
+				dlURL:"garbage.php",  //path to download test on this server (garbage.php or replacement)
+				ulURL:"empty.php",  //path to upload test on this server (empty.php or replacement)
+				pingURL:"empty.php",  //path to ping/jitter test on this server (empty.php or replacement)
+				getIpURL:"getIP.php"  //path to getIP on this server (getIP.php or replacement)
+			}*/
+			//add other servers here, comma separated
+		];
 
 		//INITIALIZE SPEEDTEST
-		var s = new Speedtest(); //create speed test object
-		s.setParameter("telemetry_level", "basic"); //enable basic telemetry (for results sharing)
+		let s = new Speedtest(); //create speed test object
 
 		//SERVER AUTO SELECTION
 		function initServers(){
@@ -31,41 +49,13 @@ function I(i) { return document.getElementById(i); }
 					s.selectServer(function (server) {
 						if (server != null) { //at least 1 server is available
 							I("loading").className = "hidden"; //hide loading message
-							//sort servers by country, then by city
-							//name formats: "City, Country", "City, Country (qualifier)", "City, Country, Provider", "Country"
-							function parseServerName(name) {
-						let parts = (name || "").split(",");
-						for (let p = 0; p < parts.length; p++) parts[p] = parts[p].trim();
-						let country, city;
-						if (parts.length >= 3) {
-							country = parts[1];
-							city = parts[0];
-						} else if (parts.length === 2) {
-							country = parts[1];
-							city = parts[0];
-						} else {
-							country = parts[0];
-							city = "";
-						}
-						country = country.replace(/\s*\([^)]*\)\s*/g, "").trim();
-						return { country: country, city: city };
-					}
-					let indexed = [];
-					for (let j = 0; j < SPEEDTEST_SERVERS.length; j++) {
-					indexed.push({ idx: j, server: SPEEDTEST_SERVERS[j] });
-				}
-				indexed.sort(function (a, b) {
-					let pa = parseServerName(a.server.name);
-					let pb = parseServerName(b.server.name);
-					return pa.country.localeCompare(pb.country) || pa.city.localeCompare(pb.city);
-				});
 				//populate server list for manual selection
-							for (let i = 0; i < indexed.length; i++) {
-					if (indexed[i].server.pingT == -1) continue;
+							for (let i = 0; i < SPEEDTEST_SERVERS.length; i++) {
+								if(SPEEDTEST_SERVERS[i].pingT==-1) continue;
 									let option = document.createElement("option");
-									option.value = indexed[i].idx;
-									option.textContent = indexed[i].server.name;
-									if (indexed[i].server === server) option.selected = true;
+								option.value=i;
+								option.textContent=SPEEDTEST_SERVERS[i].name;
+								if(SPEEDTEST_SERVERS[i]===server) option.selected=true;
 								I("server").appendChild(option);
 							}
 							//show test UI
@@ -76,26 +66,16 @@ function I(i) { return document.getElementById(i); }
 						}
 					});
 				}
-				if (typeof SPEEDTEST_SERVERS === "string") {
-					//need to fetch list of servers from specified URL
-					s.loadServerList(SPEEDTEST_SERVERS, function (servers) {
-						if (servers == null) { //failed to load server list
-							noServersAvailable();
-						} else { //server list loaded
-							SPEEDTEST_SERVERS = servers;
-							runServerSelect();
-						}
-					});
-				} else {
-					//hardcoded server list
-					s.addTestPoints(SPEEDTEST_SERVERS);
-					runServerSelect();
-				}
+
+				//hardcoded server list
+				s.addTestPoints(SPEEDTEST_SERVERS);
+				runServerSelect();
 			}
-	}
+		}
 
 		//UI CODE
 		let uiData=null;
+
 		s.onupdate=function(data){ //callback to update data in UI
 			I("ip").textContent=data.clientIp;
 			I("dlText").textContent=(data.testState==1&&data.dlStatus==0)?"...":data.dlStatus;
@@ -124,11 +104,12 @@ function I(i) { return document.getElementById(i); }
 			}
 		}
 
-function startStop(){ //start/stop button pressed
-	if(s.getState()==3){
-		//speed test is running, abort
-		s.abort();
-		I("startStopBtn").className="";
+		function startStop(){ //start/stop button pressed
+			if(s.getState()==3){
+				//speed test is running, abort
+				s.abort();
+				data = null;
+				I("startStopBtn").className="";
 		I("server").disabled=false;
 		initUI();
 	}else{

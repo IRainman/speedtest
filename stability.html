@@ -1,11 +1,11 @@
 <!doctype html>
 <html>
-<head>
-<link rel="shortcut icon" href="favicon.ico" />
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no" />
-<meta charset="UTF-8" />
-<title>SpeedtestHE - Stability Test</title>
-<style type="text/css">
+  <head>
+    <link rel="shortcut icon" href="favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no" />
+    <meta charset="UTF-8" />
+    <title>SpeedtestHE - Stability Test</title>
+    <style type="text/css">
       html,
       body {
         border: none;
@@ -274,33 +274,33 @@
         }
       }
     </style>
-</head>
-<body>
-<h1>SpeedtestHE - Stability Test</h1>
-<nav><a href="./">&larr; Speed Test</a></nav>
+  </head>
+  <body>
+    <h1>SpeedtestHE - Stability Test</h1>
+    <nav><a href="./">&larr; Speed Test</a></nav>
 
-<div id="controls">
-<select id="durationSelect">
-<option value="60">60 Seconds</option>
-<option value="90">90 Seconds</option>
-<option value="120">2 Minutes</option>
-<option value="180">3 Minutes</option>
-<option value="300">5 Minutes</option>
-</select>
-<select id="targetSelect" onchange="updateStartButtonState()">
-<option value="">Local Server</option>
-<option value="https://www.google.com/generate_204">Google</option>
-<option value="https://www.cloudflare.com/cdn-cgi/trace">Cloudflare</option>
-<option value="https://www.apple.com/library/test/success.html">Apple</option>
-</select>
-<div id="startBtn" class="disabled finding" onclick="startStop()" aria-disabled="true" title="Finding best server..."></div>
-<div id="resetBtn" onclick="resetTest()">Reset</div>
-</div>
+    <div id="controls">
+      <select id="durationSelect">
+        <option value="60">60 Seconds</option>
+        <option value="90">90 Seconds</option>
+        <option value="120">2 Minutes</option>
+        <option value="180">3 Minutes</option>
+        <option value="300">5 Minutes</option>
+      </select>
+      <select id="targetSelect" onchange="updateStartButtonState()">
+        <option value="">Local Server</option>
+        <option value="https://www.google.com/generate_204">Google</option>
+        <option value="https://www.cloudflare.com/cdn-cgi/trace">Cloudflare</option>
+        <option value="https://www.apple.com/library/test/success.html">Apple</option>
+      </select>
+      <div id="startBtn" class="disabled finding" onclick="startStop()" aria-disabled="true" title="Finding best server..."></div>
+      <div id="resetBtn" onclick="resetTest()">Reset</div>
+    </div>
 
-<div id="serverArea" style="display: none">
-Server:
-<select id="server" onchange="onServerChange(this.value)"></select>
-</div>
+    <div id="serverArea" style="display: none">
+      Server:
+      <select id="server" onchange="onServerChange(this.value)"></select>
+    </div>
 
 <div id="rating" class="none">--</div>
 
@@ -378,7 +378,7 @@ function I(i) {
 
 // Server configuration (same pattern as index.html)
 // Set this to a different URL to load the server list from another location.
-      let SPEEDTEST_SERVERS = "server-list.json";
+      var SPEEDTEST_SERVERS = "server-list.json";
 
 // State
       let worker = null;
@@ -415,56 +415,29 @@ function I(i) {
         return server + "/" + path;
       }
 
-      // Load server list dynamically (Docker exposes server-list.json; older setups may expose servers.json)
       function loadServers(callback) {
         if (Array.isArray(SPEEDTEST_SERVERS)) {
           callback();
           return;
         }
 
-        let serverListUrl = typeof SPEEDTEST_SERVERS === "string" ? SPEEDTEST_SERVERS : "";
-        if (!serverListUrl) {
-          SPEEDTEST_SERVERS = [];
-          callback();
-          return;
-        }
-
+        const serverListUrl = typeof SPEEDTEST_SERVERS === "string" ? SPEEDTEST_SERVERS : "";
         let xhr = new XMLHttpRequest();
         xhr.onload = function () {
           let loadedServers = null;
           try {
             let servers = JSON.parse(xhr.responseText);
             if (Array.isArray(servers)) {
-              loadedServers = servers;
+              SPEEDTEST_SERVERS = servers;
             }
-          } catch (e) {}
-
-          if (loadedServers !== null) {
-            SPEEDTEST_SERVERS = loadedServers;
-            callback();
-          } else if (!xhr._fallbackTried) {
-            xhr._fallbackTried = true;
-            xhr.open("GET", "servers.json?r=" + Math.random());
-            xhr.send();
-          } else {
+          } catch (e) {
             SPEEDTEST_SERVERS = [];
-            callback();
           }
+          callback();
         };
-        xhr.onerror = function () {
-          if (xhr._fallbackTried) {
-            SPEEDTEST_SERVERS = [];
-            callback();
-          } else {
-            xhr._fallbackTried = true;
-            xhr.open("GET", "servers.json?r=" + Math.random());
-            xhr.send();
-          }
-        };
-        xhr.open("GET", serverListUrl + (serverListUrl.match(/\?/) ? "&" : "?") + "r=" + Math.random());
+        xhr.open("GET", serverListUrl);
         try {
           xhr.timeout = 2000;
-          xhr.ontimeout = xhr.onerror;
         } catch (e) {}
         xhr.send();
       }
