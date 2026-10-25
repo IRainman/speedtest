@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 <link rel="shortcut icon" href="favicon.ico">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no" />
@@ -10,28 +11,29 @@ function I(i) { return document.getElementById(i); }
 
 		let SPEEDTEST_SERVERS = "server-list.json";
 
-//INITIALIZE SPEEDTEST
-let s=new Speedtest(); //create speed test object
+		//INITIALIZE SPEEDTEST
+		var s = new Speedtest(); //create speed test object
+		s.setParameter("telemetry_level", "basic"); //enable basic telemetry (for results sharing)
 
-//SERVER AUTO SELECTION
-function initServers(){
-	if (SPEEDTEST_SERVERS.length == 0) { //standalone installation
-		//just make the UI visible
-		I("loading").className = "hidden";
-		I("serverArea").style.display = "none";
-		I("testWrapper").className = "visible";
-		initUI();
-	} else { //multiple servers
+		//SERVER AUTO SELECTION
+		function initServers(){
+			if (SPEEDTEST_SERVERS.length == 0) { 					//standalone installation
+				//just make the UI visible
+				I("loading").className = "hidden";
+				I("serverArea").style.display = "none";
+				I("testWrapper").className = "visible";
+				initUI();
+			} else { //multiple servers
 				var noServersAvailable = function () {
 					I("message").innerHTML = "No servers available";
 				}
-	const runServerSelect=function(){
-		s.selectServer(function(server){
-			if(server!=null){ //at least 1 server is available
-				I("loading").className="hidden"; //hide loading message
-					//sort servers by country, then by city
-					//name formats: "City, Country", "City, Country (qualifier)", "City, Country, Provider", "Country"
-					function parseServerName(name) {
+				var runServerSelect=function(){
+					s.selectServer(function (server) {
+						if (server != null) { //at least 1 server is available
+							I("loading").className = "hidden"; //hide loading message
+							//sort servers by country, then by city
+							//name formats: "City, Country", "City, Country (qualifier)", "City, Country, Provider", "Country"
+							function parseServerName(name) {
 						let parts = (name || "").split(",");
 						for (let p = 0; p < parts.length; p++) parts[p] = parts[p].trim();
 						let country, city;
@@ -58,69 +60,69 @@ function initServers(){
 					return pa.country.localeCompare(pb.country) || pa.city.localeCompare(pb.city);
 				});
 				//populate server list for manual selection
-				for (let i = 0; i < indexed.length; i++) {
+							for (let i = 0; i < indexed.length; i++) {
 					if (indexed[i].server.pingT == -1) continue;
-						let option = document.createElement("option");
-						option.value = indexed[i].idx;
-						option.textContent = indexed[i].server.name;
-						if (indexed[i].server === server) option.selected = true;
-					I("server").appendChild(option);
+									let option = document.createElement("option");
+									option.value = indexed[i].idx;
+									option.textContent = indexed[i].server.name;
+									if (indexed[i].server === server) option.selected = true;
+								I("server").appendChild(option);
+							}
+							//show test UI
+							I("testWrapper").className="visible";
+							initUI();
+						}else{ //no servers are available, the test cannot proceed
+							noServersAvailable();
+						}
+					});
 				}
-				//show test UI
-				I("testWrapper").className="visible";
+				if (typeof SPEEDTEST_SERVERS === "string") {
+					//need to fetch list of servers from specified URL
+					s.loadServerList(SPEEDTEST_SERVERS, function (servers) {
+						if (servers == null) { //failed to load server list
+							noServersAvailable();
+						} else { //server list loaded
+							SPEEDTEST_SERVERS = servers;
+							runServerSelect();
+						}
+					});
+				} else {
+					//hardcoded server list
+					s.addTestPoints(SPEEDTEST_SERVERS);
+					runServerSelect();
+				}
+			}
+	}
+
+		//UI CODE
+		let uiData=null;
+		s.onupdate=function(data){ //callback to update data in UI
+			I("ip").textContent=data.clientIp;
+			I("dlText").textContent=(data.testState==1&&data.dlStatus==0)?"...":data.dlStatus;
+			I("ulText").textContent=(data.testState==3&&data.ulStatus==0)?"...":data.ulStatus;
+			I("pingText").textContent=data.pingStatus;
+			I("jitText").textContent=data.jitterStatus;
+			uiData=data;
+		}
+
+		s.onend=function(aborted){ //callback for test ended/aborted
+			I("startStopBtn").className=""; //show start button again
+			I("server").disabled=false;
+			if(!aborted){//if testId is present, show sharing panel, otherwise do nothing
+				try{
+					const testId=uiData.testId;
+					if(testId!=null){
+						const shareURL=window.location.href.substring(0,window.location.href.lastIndexOf("/"))+"/results/?id="+testId + "&style=classic";
+						I("resultsImg").src=shareURL;
+						I("resultsURL").value=shareURL;
+						I("testId").innerHTML=testId;
+						I("shareArea").style.display="";
+					}
+				}catch(e){console.warn(e);}
+			}else{ //if the test was aborted, clear the UI and prepare for new test
 				initUI();
-			}else{ //no servers are available, the test cannot proceed
-							noServersAvailable();
 			}
-		});
-	}
-	if (typeof SPEEDTEST_SERVERS === "string") {
-		//need to fetch list of servers from specified URL
-		s.loadServerList(SPEEDTEST_SERVERS, function (servers) {
-			if (servers == null) { //failed to load server list
-							noServersAvailable();
-			} else { //server list loaded
-				SPEEDTEST_SERVERS = servers;
-				runServerSelect();
-			}
-		});
-	} else {
-	//hardcoded server list
-	s.addTestPoints(SPEEDTEST_SERVERS);
-	runServerSelect();
-}
-	}
-}
-
-//UI CODE
-let uiData=null;
-s.onupdate=function(data){ //callback to update data in UI
-	I("ip").textContent=data.clientIp;
-	I("dlText").textContent=(data.testState==1&&data.dlStatus==0)?"...":data.dlStatus;
-	I("ulText").textContent=(data.testState==3&&data.ulStatus==0)?"...":data.ulStatus;
-	I("pingText").textContent=data.pingStatus;
-	I("jitText").textContent=data.jitterStatus;
-	uiData=data;
-}
-
-s.onend=function(aborted){ //callback for test ended/aborted
-	I("startStopBtn").className=""; //show start button again
-	I("server").disabled=false;
-	if(!aborted){//if testId is present, show sharing panel, otherwise do nothing
-		try{
-			const testId=uiData.testId;
-			if(testId!=null){
-				const shareURL=window.location.href.substring(0,window.location.href.lastIndexOf("/"))+"/results/?id="+testId + "&style=classic";
-				I("resultsImg").src=shareURL;
-				I("resultsURL").value=shareURL;
-				I("testId").innerHTML=testId;
-				I("shareArea").style.display="";
-			}
-		}catch(e){console.warn(e);}
-	}else{ //if the test was aborted, clear the UI and prepare for new test
-		initUI();
-	}
-}
+		}
 
 function startStop(){ //start/stop button pressed
 	if(s.getState()==3){
@@ -146,8 +148,6 @@ function initUI(){
 	I("jitText").textContent="";
 	I("ip").textContent="";
 }
-
-function I(id){return document.getElementById(id);}
 </script>
 
 <style>
