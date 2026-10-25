@@ -36,8 +36,8 @@ function twarn(s) {
 	console.warn(s);
 }
 
-// test settings.
-const settings = {
+// test settings. can be overridden by sending specific values with the start command
+let settings = {
 	mpot: false, //set to true when in MPOT mode
 	test_order: "IP_D_U", //order in which tests will be performed as a string. D=Download, U=Upload, P=Ping+Jitter, I=IP, _=1 second delay
 	time_ul_max: 20, // max duration of upload test in seconds

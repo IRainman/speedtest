@@ -15,6 +15,16 @@ let s=new Speedtest(); //create speed test object
 
 //SERVER AUTO SELECTION
 function initServers(){
+	if (SPEEDTEST_SERVERS.length == 0) { //standalone installation
+		//just make the UI visible
+		I("loading").className = "hidden";
+		I("serverArea").style.display = "none";
+		I("testWrapper").className = "visible";
+		initUI();
+	} else { //multiple servers
+				var noServersAvailable = function () {
+					I("message").innerHTML = "No servers available";
+				}
 	const runServerSelect=function(){
 		s.selectServer(function(server){
 			if(server!=null){ //at least 1 server is available
@@ -60,7 +70,7 @@ function initServers(){
 				I("testWrapper").className="visible";
 				initUI();
 			}else{ //no servers are available, the test cannot proceed
-				I("message").innerHTML="No servers available";
+							noServersAvailable();
 			}
 		});
 	}
@@ -68,7 +78,7 @@ function initServers(){
 		//need to fetch list of servers from specified URL
 		s.loadServerList(SPEEDTEST_SERVERS, function (servers) {
 			if (servers == null) { //failed to load server list
-				I("message").innerHTML="No servers available";
+							noServersAvailable();
 			} else { //server list loaded
 				SPEEDTEST_SERVERS = servers;
 				runServerSelect();
@@ -98,7 +108,7 @@ s.onend=function(aborted){ //callback for test ended/aborted
 		try{
 			const testId=uiData.testId;
 			if(testId!=null){
-				const shareURL=window.location.href.substring(0,window.location.href.lastIndexOf("/"))+"/results/?id="+testId;
+				const shareURL=window.location.href.substring(0,window.location.href.lastIndexOf("/"))+"/results/?id="+testId + "&style=classic";
 				I("resultsImg").src=shareURL;
 				I("resultsURL").value=shareURL;
 				I("testId").innerHTML=testId;

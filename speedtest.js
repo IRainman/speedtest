@@ -197,7 +197,11 @@ Speedtest.prototype = {
     const select = function(serverList, selected) {
       //pings the specified URL, then calls the function result. Result will receive a parameter which is either the time it took to ping the URL, or -1 if something went wrong.
       const PING_TIMEOUT = 2000;
-
+      let USE_PING_TIMEOUT = true; //will be disabled on unsupported browsers
+      if (/MSIE.(\d+\.\d+)/i.test(navigator.userAgent)) {
+        //IE11 doesn't support XHR timeout
+        USE_PING_TIMEOUT = false;
+      }
       const ping = function(url, rtt) {
         url += (url.match(/\?/) ? "&" : "?") + "cors=true";
         let xhr = new XMLHttpRequest();
@@ -221,10 +225,12 @@ Speedtest.prototype = {
           rtt(-1);
         }.bind(this);
         xhr.open("GET", url);
+        if (USE_PING_TIMEOUT) {
         try {
           xhr.timeout = PING_TIMEOUT;
           xhr.ontimeout = xhr.onerror;
         } catch (e) {}
+        }
         xhr.send();
       }.bind(this);
 
@@ -234,8 +240,12 @@ Speedtest.prototype = {
       const checkServer = function(server, done) {
         let i = 0;
         server.pingT = -1;
-        if (server.server.indexOf(location.protocol) == -1) done();
-        else {
+        if (
+          location.protocol === "https:" &&
+          server.server.substring(0, 7).toLowerCase() === "http://"
+        )
+          done();
+                  else {
           const nextPing = function() {
             if (i++ == PINGS) {
               done();
