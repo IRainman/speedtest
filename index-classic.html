@@ -52,7 +52,7 @@
 				//populate server list for manual selection
 							for (let i = 0; i < SPEEDTEST_SERVERS.length; i++) {
 								if(SPEEDTEST_SERVERS[i].pingT==-1) continue;
-									let option = document.createElement("option");
+								let option=document.createElement("option");
 								option.value=i;
 								option.textContent=SPEEDTEST_SERVERS[i].name;
 								if(SPEEDTEST_SERVERS[i]===server) option.selected=true;
@@ -70,7 +70,7 @@
 				//hardcoded server list
 				s.addTestPoints(SPEEDTEST_SERVERS);
 				runServerSelect();
-			}
+		}
 		}
 
 		//UI CODE
@@ -92,7 +92,7 @@
 				try{
 					const testId=uiData.testId;
 					if(testId!=null){
-						const shareURL=window.location.href.substring(0,window.location.href.lastIndexOf("/"))+"/results/?id="+testId + "&style=classic";
+						const shareURL=window.location.href.substring(0,window.location.href.lastIndexOf("/"))+"/results/?id="+testId;
 						I("resultsImg").src=shareURL;
 						I("resultsURL").value=shareURL;
 						I("testId").innerHTML=testId;

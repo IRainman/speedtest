@@ -274,8 +274,8 @@
         }
       }
     </style>
-  </head>
-  <body>
+</head>
+<body>
     <h1>SpeedtestHE - Stability Test</h1>
     <nav><a href="./">&larr; Speed Test</a></nav>
 
@@ -377,7 +377,7 @@ function I(i) {
 }
 
 		//LIST OF TEST SERVERS. Leave empty if you're doing a standalone installation. See documentation for details
-		var SPEEDTEST_SERVERS = [
+		const SPEEDTEST_SERVERS=[
 			/*{	//this server doesn't actually exist, remove it
 				name:"Example Server 1", //user friendly name for the server
 				server:"//test1.mydomain.com/", //URL to the server. // at the beginning will be replaced with http:// or https:// automatically
@@ -441,7 +441,6 @@ function I(i) {
         const serverListUrl = typeof SPEEDTEST_SERVERS === "string" ? SPEEDTEST_SERVERS : "";
         let xhr = new XMLHttpRequest();
         xhr.onload = function () {
-          let loadedServers = null;
           try {
             let servers = JSON.parse(xhr.responseText);
             if (Array.isArray(servers)) {
